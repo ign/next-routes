@@ -73,6 +73,20 @@ describe('Routes', () => {
     expect(query).not.toHaveProperty('a')
   })
 
+  test('match and merge params with percent', () => {
+    const routes = nextRoutes().add('a', '/a/:b')
+    const { query } = routes.match('/a/100%')
+    expect(query).toMatchObject({ b: '100%' })
+    expect(query).not.toHaveProperty('a')
+  })
+
+  test('match and merge escaped params with encoded percent', () => {
+    const routes = nextRoutes().add('a', '/a/:b')
+    const { query } = routes.match('/a/100%25')
+    expect(query).toMatchObject({ b: '100%' })
+    expect(query).not.toHaveProperty('a')
+  })
+
   test('generate urls from params', () => {
     const {route} = setup('a', '/a/:b/:c+')
     const params = {b: 'b', c: [1, 2], d: 'd'}
